@@ -131,6 +131,7 @@
 	*/
 	$query = "SELECT COUNT(*) as num FROM $tbl_name";
 	$total_pages = mysql_fetch_array(mysql_query($query));
+    $totalcount=$total_pages;
 	$total_pages = $total_pages[num];
 	
 	/* Setup vars for query. */
@@ -237,8 +238,8 @@
 	}
 ?>
 
-	<?php
-        if(mysql_affected_rows($result)>0){
+	<?php        
+        if(mysql_num_rows($result)>0){
 		while($r = mysql_fetch_array($result)){
 ?>          
     <div id="post">
@@ -334,48 +335,9 @@
 	?>
 <?=$pagination?>
 <?php $con->CloseConnection(); ?>        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-<?php    
-    //disply all user posts
-    $con=new MySQL();
-        
-    $query="select u.id as post_id,u.user_id as user_id,concat(ur.firstname,' ',ur.lastname) as user_name,u.post_content as post_content,u.post_datetime as post_datetime from user_post u,user_registration ur where u.user_id=ur.id order by u.post_datetime desc";
-
-    $result = mysql_query($query);  
-    //echo $query;
-    //echo "<pre>";
-    //print_r(mysql_fetch_array($result));
-    //echo "</pre>";  
+  </div>    
     
-    if(mysql_num_rows($result)>0)
-    {
-        while($r=mysql_fetch_array($result)){
-                                   
-        }
-    }else{
-        echo "No post found";    
-    }           
-    $con->CloseConnection();
-            
-?>    
-    </div>    
-    
-    
-    
-    
-    
-    
+   
 <?php include_once "includes/footer.php";?>   
 
 </body>
