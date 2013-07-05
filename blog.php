@@ -2,9 +2,11 @@
     <head>
         <title>
             Blog
-        </title>           
+        </title> 
+        <link href="css/pagination.css" rel="stylesheet" type="text/css" />          
     </head>
     <body>
+   
     <div id="content" style="width: 500px;margin:0px auto">
 <?php
     include_once("admin/includes/connection.php");
@@ -29,29 +31,133 @@
         $con->CloseConnection();
     }
 ?>
-<?php    
-    //disply all user posts
-    $con=new MySQL();
-    
-    $query="SELECT ";
-    $query.="u.id as post_id";
-    $query.=",u.user_id as user_id";
-    $query.=",concat(ur.firstname,' ',ur.lastname) as user_name";
-    $query.=",u.post_content as post_content";
-    $query.=",u.post_datetime as post_datetime";
-    $query.="FROM `user_post` u,user_registration ur where u.user_id=ur.id";
-    
-    $query="select u.id as post_id,u.user_id as user_id,concat(ur.firstname,' ',ur.lastname) as user_name,u.post_content as post_content,u.post_datetime as post_datetime from user_post u,user_registration ur where u.user_id=ur.id order by u.post_datetime desc";
 
-    $result = mysql_query($query);  
-    //echo $query;
-    //echo "<pre>";
-    //print_r(mysql_fetch_array($result));
-    //echo "</pre>";  
-    
-    if(mysql_num_rows($result)>0)
-    {
-        while($r=mysql_fetch_array($result)){
+
+
+<?php
+	/*
+		Place code to connect to your DB here.
+	*/
+    //disply all user posts
+    $con=new MySQL(); 
+	$tbl_name="user_post";		//your table name
+	// How many adjacent pages should be shown on each side?
+	$adjacents = 3;
+	
+	/* 
+	   First get total number of rows in data table. 
+	   If you have a WHERE clause in your query, make sure you mirror it here.
+	*/
+	$query = "SELECT COUNT(*) as num FROM $tbl_name";
+	$total_pages = mysql_fetch_array(mysql_query($query));
+	$total_pages = $total_pages[num];
+	
+	/* Setup vars for query. */
+	$targetpage = "blog.php"; 	//your file name  (the name of this file)
+	$limit = 5; 								//how many items to show per page
+	$page = $_GET['page'];
+	if($page) 
+		$start = ($page - 1) * $limit; 			//first item to display on this page
+	else
+		$start = 0;								//if no page var is given, set start to 0
+	
+	/* Get data. */
+    $sql="select u.id as post_id,u.user_id as user_id,concat(ur.firstname,' ',ur.lastname) as user_name,u.post_content as post_content,u.post_datetime as post_datetime from $tbl_name u,user_registration ur where u.user_id=ur.id order by u.post_datetime desc LIMIT $start, $limit";    
+	//$sql = "SELECT column_name FROM $tbl_name LIMIT $start, $limit";
+	$result = mysql_query($sql);
+	
+	/* Setup page vars for display. */
+	if ($page == 0) $page = 1;					//if no page var is given, default to 1.
+	$prev = $page - 1;							//previous page is page - 1
+	$next = $page + 1;							//next page is page + 1
+	$lastpage = ceil($total_pages/$limit);		//lastpage is = total pages / items per page, rounded up.
+	$lpm1 = $lastpage - 1;						//last page minus 1
+	
+	/* 
+		Now we apply our rules and draw the pagination object. 
+		We're actually saving the code to a variable in case we want to draw it more than once.
+	*/
+	$pagination = "";
+	if($lastpage > 1)
+	{	
+		$pagination .= "<div class=\"pagination\">";
+		//previous button
+		if ($page > 1) 
+			$pagination.= "<a href=\"$targetpage?page=$prev\"><< Previous</a>";
+		else
+			$pagination.= "<span class=\"disabled\"><< Previous</span>";	
+		
+		//pages	
+		if ($lastpage < 7 + ($adjacents * 2))	//not enough pages to bother breaking it up
+		{	
+			for ($counter = 1; $counter <= $lastpage; $counter++)
+			{
+				if ($counter == $page)
+					$pagination.= "<span class=\"current\">$counter</span>";
+				else
+					$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";					
+			}
+		}
+		elseif($lastpage > 5 + ($adjacents * 2))	//enough pages to hide some
+		{
+			//close to beginning; only hide later pages
+			if($page < 1 + ($adjacents * 2))		
+			{
+				for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++)
+				{
+					if ($counter == $page)
+						$pagination.= "<span class=\"current\">$counter</span>";
+					else
+						$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";					
+				}
+				$pagination.= "...";
+				$pagination.= "<a href=\"$targetpage?page=$lpm1\">$lpm1</a>";
+				$pagination.= "<a href=\"$targetpage?page=$lastpage\">$lastpage</a>";		
+			}
+			//in middle; hide some front and some back
+			elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2))
+			{
+				$pagination.= "<a href=\"$targetpage?page=1\">1</a>";
+				$pagination.= "<a href=\"$targetpage?page=2\">2</a>";
+				$pagination.= "...";
+				for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++)
+				{
+					if ($counter == $page)
+						$pagination.= "<span class=\"current\">$counter</span>";
+					else
+						$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";					
+				}
+				$pagination.= "...";
+				$pagination.= "<a href=\"$targetpage?page=$lpm1\">$lpm1</a>";
+				$pagination.= "<a href=\"$targetpage?page=$lastpage\">$lastpage</a>";		
+			}
+			//close to end; only hide early pages
+			else
+			{
+				$pagination.= "<a href=\"$targetpage?page=1\">1</a>";
+				$pagination.= "<a href=\"$targetpage?page=2\">2</a>";
+				$pagination.= "...";
+				for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++)
+				{
+					if ($counter == $page)
+						$pagination.= "<span class=\"current\">$counter</span>";
+					else
+						$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";					
+				}
+			}
+		}
+		
+		//next button
+		if ($page < $counter - 1) 
+			$pagination.= "<a href=\"$targetpage?page=$next\">Next >></a>";
+		else
+			$pagination.= "<span class=\"disabled\">Next >></span>";
+		$pagination.= "</div>\n";		
+	}
+?>
+
+	<?php
+		while($r = mysql_fetch_array($result)){
 ?>          
     <div id="post">
         <div id="content" style="width: 100%;margin: 10px;background-color:#53C2FE ;">
@@ -108,14 +214,12 @@
             ?>
         </div>
     </div>  
-<?php                                    
-        }
-    }else{
-        echo "No post found";    
-    }           
-    $con->CloseConnection();
-            
-?>    
+<?php    
+		}
+	?>
+
+<?=$pagination?>
+	    <?php $con->CloseConnection(); ?>
     </div>
     </body>    
 </html>
