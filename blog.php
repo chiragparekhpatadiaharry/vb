@@ -10,7 +10,7 @@
 <?php
     include_once("admin/includes/connection.php");
 ?>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING']?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
     <input type="text" name="user_id" />
     <br />
     <textarea id="post_content" name="post_content" style="width: 100%;" placeholder="Whats on your mind"></textarea>
@@ -216,7 +216,6 @@
 <?php    
 		}
 	?>
-
 <?=$pagination?>
 	    <?php $con->CloseConnection(); ?>
     </div>
