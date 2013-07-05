@@ -6,12 +6,11 @@
         <link href="css/pagination.css" rel="stylesheet" type="text/css" />          
     </head>
     <body>
-   
     <div id="content" style="width: 500px;margin:0px auto">
 <?php
     include_once("admin/includes/connection.php");
 ?>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING']?>">
     <input type="text" name="user_id" />
     <br />
     <textarea id="post_content" name="post_content" style="width: 100%;" placeholder="Whats on your mind"></textarea>
@@ -196,7 +195,7 @@
             ?>
         </div>
         <div id="reply" style="margin-left:30px">
-            <form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING']?>">
                 <input type="text" name="reply_content" style="width:80%" placeholder="Write your reply..." />
                 <input type="hidden" name="post_id" value="<?php echo $r["post_id"] ?>" />
                 <input type="submit" name="submitreply<?php echo $r["post_id"];?>" value="Reply" />
