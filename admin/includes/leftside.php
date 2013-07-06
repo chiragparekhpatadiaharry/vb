@@ -30,7 +30,7 @@
             <ul class="sub">
                 <li><a href="about-us-category.php" title="">Category</a></li>
                 <li><a href="about-us-content.php" title="">Content</a></li>
-                <li><a href="#" title="">Add Content</a></li>
+                <li><a href="add-new-about-us-content.php" title="">Add Content</a></li>
             </ul>
         </li>
         <li class="ui"><a href="#" title=""><span>Feedback</span></a></li>
