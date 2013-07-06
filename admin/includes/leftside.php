@@ -29,7 +29,7 @@
         <li class="forms"><a href="#" title="" class="exp"><span>About us page</span><strong>3</strong></a>
             <ul class="sub">
                 <li><a href="about-us-category.php" title="">Category</a></li>
-                <li><a href="#" title="">Content</a></li>
+                <li><a href="about-us-content.php" title="">Content</a></li>
                 <li><a href="#" title="">Add Content</a></li>
             </ul>
         </li>
