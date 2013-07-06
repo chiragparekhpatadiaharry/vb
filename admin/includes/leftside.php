@@ -9,9 +9,9 @@
         <li class="dash"><a href="home.php" title="" class="active"><span>Dashboard</span></a></li>
         <li class="forms"><a href="#" title="" class="exp"><span>Photo Gallery</span><strong>3</strong></a>
             <ul class="sub">
-                <li><a href="#" title="">View</a></li>
                 <li><a href="photo-album.php" title="">Album</a></li>
-                <li><a href="#" title="">Add Photo</a></li>                
+                <li><a href="photo.php" title="">Photos</a></li>
+                <li><a href="add-new-photo.php" title="">Add Photo</a></li>
             </ul>
         </li>
         <li class="forms"><a href="#" title="" class="exp"><span>Media Gallery</span><strong>3</strong></a>

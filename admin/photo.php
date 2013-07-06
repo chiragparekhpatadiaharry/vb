@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Photo Album</title>
+<title>Photo</title>
 
 <link href="css/main.css" rel="stylesheet" type="text/css" />
 
@@ -77,7 +77,7 @@
     <div class="titleArea">
         <div class="wrapper">
             <div class="pageTitle">
-                <h5>Photo Album</h5>
+                <h5>Photo</h5>
                <!--<span>Manage Photo Album.</span>-->
             </div>
             <div class="clear"></div>
@@ -89,7 +89,7 @@
     <!-- Main content wrapper -->
     <div class="wrapper">
         <br />
-        <a style="margin: 5px;" class="button blueB" title="" href="add-new-photo-album.php">
+        <a style="margin: 5px;" class="button blueB" title="" href="add-new-photo.php">
             <img class="icon" alt="" src="images/icons/light/add.png" />
             <span>Add New</span>
         </a>
@@ -108,11 +108,17 @@
                       }
                       $qid=substr($qid,0,strlen($qid)-1);
                       $con=new MySQL();
-                      if(mysql_query("delete from album_photo_gallery where id in(".$qid.")"))
+                      $rs=mysql_query("select path from image_photo_gallery where id in(".$qid.")");
+                      while($r=mysql_fetch_array($rs))
+                      {
+                        unlink("uploads/original/".$r['path']);
+                        unlink("uploads/thumbs/".$r['path']);
+                      }
+                      if(mysql_query("delete from image_photo_gallery where id in(".$qid.")"))
                       {
         ?>
                         <div class="nNote nSuccess hideit">
-                            <p><strong>SUCCESS: </strong>Selected photo album deleted successfully.</p>
+                            <p><strong>SUCCESS: </strong>Selected photo deleted successfully.</p>
                         </div>
         <?php    
                       }
@@ -120,7 +126,7 @@
                       {
         ?>
                         <div class="nNote nFailure hideit">
-                            <p><strong>FAILURE: </strong>Oops sorry. We are unable to delete selected photo album. Please try again.</p>
+                            <p><strong>FAILURE: </strong>Oops sorry. We are unable to delete selected photo. Please try again.</p>
                         </div>
         <?php  
                       }
@@ -130,29 +136,60 @@
                 {
         ?>
                     <div class="nNote nWarning hideit">
-                        <p><strong>WARNING: </strong>Select at least one photo album.</p>
+                        <p><strong>WARNING: </strong>Select at least one photo.</p>
                     </div>
         <?php
                 }
           }
         ?>
+        <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+        <br />
+        <select name="lstAlbum">
+           <option selected="" value="-1">- - Select Album - -</option>
+           <?php
+                include_once "includes/connection.php";
+                $con=new MySQL();
+                $rs=mysql_query("select id,name from album_photo_gallery");
+                $s="";
+                if(mysql_num_rows($rs)>0)
+                {
+                    while($r=mysql_fetch_array($rs))
+                    {
+                        if(isset($_POST['lstAlbum']) && $_POST['lstAlbum']!="-1" && $r['id']==$_POST['lstAlbum'])
+                            $s="selected=\"\"";
+                        else
+                            $s="";
+           ?>
+                        <option <?php echo $s;?> value="<?php echo $r['id']; ?>"><?php echo $r['name']; ?></option>
+           <?php
+                    }
+                }
+                $con->CloseConnection();
+           ?>
+        </select>
+        <div style="float: left;margin: 0px;margin-left:10px" class="formSubmit">
+            <input name="btnFilter" class="greenB" type="submit" value="Filter" />
+        </div>      
+        <div class="clear"></div>
         
-        <div class="widget" style="margin-top:20px;">
-            <div class="title"><span class="titleIcon"><input type="checkbox" name="titleCheck" id="titleCheck"></span><h6>Photo Album</h6></div>
-            <form onsubmit="javascript: return confirm('Do you really want to delete selected photo album?');" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+        <div class="widget" style="margin-top:5px;">
+            <div class="title"><span class="titleIcon"><input type="checkbox" name="titleCheck" id="titleCheck" /></span><h6>Photo</h6></div>
+            
             <table width="100%" cellspacing="0" cellpadding="0" id="checkAll" class="sTable withCheck mTable">
                 <thead>
                     <tr>
-                        <td><img alt="" src="images/icons/tableArrows.png"></td>
-                        <td class="sortCol">Album Name</td>
+                        <td><img alt="" src="images/icons/tableArrows.png" /></td>
+                        <td class="sortCol">Photo Name</td>
+                        <td>Image</td>
+                        <td>Description</td>
                         <td style="width: 11%;">Actions</td>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <td colspan="3">
+                        <td colspan="5">
                             <div style="float: left;" class="formSubmit">
-                                <input name="btnDelete" class="redB" type="submit" value="Delete Selected" />
+                                <input onclick="javascript: return confirm('Do you really want to delete selected photo?');" name="btnDelete" class="redB" type="submit" value="Delete Selected" />
                             </div>
                             <!--
                             <div class="itemActions">
@@ -186,7 +223,17 @@
                     <?php
                         include_once "includes/connection.php";
                         $con=new MySQL();
-                        $rs=mysql_query("select * from album_photo_gallery order by id");
+                        $q="";
+                        if(isset($_POST['btnFilter']) && $_POST['lstAlbum']!="-1")
+                        {
+                            $aid=$_POST['lstAlbum'];
+                            $q="select * from image_photo_gallery where album_id=".$aid." order by id";
+                        }
+                        else
+                        {
+                            $q="select * from image_photo_gallery order by id";
+                        }
+                        $rs=mysql_query($q);
                         if(mysql_num_rows($rs)>0)
                         {
                             while($r=mysql_fetch_array($rs))
@@ -197,12 +244,20 @@
                         <td>
                             <input value="<?php echo $r['id'] ?>" type="checkbox" name="checkRow[]" id="checkRow<?php echo $r['id'] ?>" id="titleCheck2" />
                         </td>
-                        <td align="left"><?php echo $r["name"]; ?></td>                        
+                        <td align="left"><?php echo $r["name"]; ?></td>
+                        <td align="center">
+                            <a rel="lightbox" title="" href="uploads/original/<?php echo $r["path"]; ?>">
+                                <img style="height: 60px;width: 60px;border:2px solid #cecece" alt="" src="uploads/thumbs/<?php echo $r["path"]; ?>" />
+                            </a>
+                        </td>
+                        <td>
+                            <?php echo $r["description"]; ?>
+                        </td>                     
                         <td class="actBtns">
-                            <a class="tipS" title="Update" href="update-photo-album.php?q=<?php echo $r["id"];?>">
+                            <a class="tipS" title="Update" href="update-photo.php?q=<?php echo $r["id"];?>">
                                 <img alt="" src="images/icons/edit.png" />
                             </a>
-                            <a onclick="javascript: return confirm('Do you really want to delete this photo album?');" class="tipS" title="Remove" href="delete-photo-album.php?q=<?php echo $r["id"];?>">
+                            <a onclick="javascript: return confirm('Do you really want to delete this photo?');" class="tipS" title="Remove" href="delete-photo.php?q=<?php echo $r["id"];?>">
                                 <img alt="" src="images/icons/remove.png" />
                             </a>
                         </td>
@@ -215,9 +270,9 @@
                         {
                     ?>
                             <tr>
-                                <td colspan="3">
+                                <td colspan="5">
                                     <div style="margin-top: 0px;" class="nNote nInformation hideit">
-                                        <p><strong>INFORMATION: </strong>No photo album found.</p>
+                                        <p><strong>INFORMATION: </strong>No photo found.</p>
                                     </div>
                                 </td>
                             </tr>

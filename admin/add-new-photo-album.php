@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Home</title>
+<title>Add New Photo Album</title>
 
 <link href="css/main.css" rel="stylesheet" type="text/css" />
 
@@ -15,13 +15,13 @@
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
-
 <script type="text/javascript" src="js/plugins/charts/excanvas.min.js"></script>
 <script type="text/javascript" src="js/plugins/charts/jquery.flot.js"></script>
 <script type="text/javascript" src="js/plugins/charts/jquery.flot.orderBars.js"></script>
 <script type="text/javascript" src="js/plugins/charts/jquery.flot.pie.js"></script>
 <script type="text/javascript" src="js/plugins/charts/jquery.flot.resize.js"></script>
 <script type="text/javascript" src="js/plugins/charts/jquery.sparkline.min.js"></script>
+
 
 <script type="text/javascript" src="js/plugins/forms/uniform.js"></script>
 <script type="text/javascript" src="js/plugins/forms/jquery.cleditor.js"></script>
@@ -77,8 +77,8 @@
     <div class="titleArea">
         <div class="wrapper">
             <div class="pageTitle">
-                <h5>Dashboard</h5>
-                <span>Welcome to dashboard.</span>
+                <h5>Add New Photo Album</h5>
+                <!--<span>Add new photo album.</span>-->
             </div>
             <div class="clear"></div>
         </div>
@@ -88,9 +88,71 @@
     
     <!-- Main content wrapper -->
     <div class="wrapper">
-    
-        
-    
+        <br />
+        <a style="margin: 5px;" class="button blueB" title="" href="photo-album.php">
+            <img class="icon" alt="" src="images/icons/light/view.png" />
+            <span>View</span>
+        </a>
+        <?php
+             include_once "includes/connection.php";
+             $con=new MySQL();
+             if(isset($_POST['btnSubmit']))
+             {
+                $alubmName=$_POST['txtPhotoAlbumName'];
+                if(trim($alubmName)!="")
+                {
+                    $rs=mysql_query("select id from album_photo_gallery where name like '".$alubmName."'");
+                    if(mysql_num_rows($rs)>0)
+                    {
+        ?>
+                        <div class="nNote nWarning hideit">
+                            <p><strong>WARNING: </strong>Photo album with this name already exists. Specify different name.</p>
+                        </div>
+        <?php
+                    }
+                    else
+                    {
+                        if(mysql_query("insert into album_photo_gallery(name) values('".$alubmName."')"))
+                        {
+        ?>
+                                <div class="nNote nSuccess hideit">
+                                    <p><strong>SUCCESS: </strong>New photo album saved successfully.</p>
+                                </div>
+        <?php
+                        }
+                        else
+                        {
+        ?>
+                            <div class="nNote nFailure hideit">
+                                <p><strong>FAILURE: </strong>Oops sorry. We are unable to save photo album. Please try again.</p>
+                            </div>
+        <?php
+                        }
+                    }
+                }
+             }
+             $con->CloseConnection();
+        ?>
+        <form  style="margin-top:20px;" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" class="form" id="validate">
+        	<fieldset>
+                <div class="widget" style="margin-top: 20px;">
+                    <div class="title">
+                        <img class="titleIcon" alt="" src="images/icons/dark/add.png" />
+                        <h6>Add Photo Album</h6>
+                    </div>
+                    <div class="formRow">
+                        <label>Album Name:&nbsp;<span class="req">*</span></label>
+                        <div class="formRight">
+                            <input type="text" id="txtPhotoAlbumName" name="txtPhotoAlbumName" class="validate[required]" />
+                        </div><div class="clear"></div>
+                    </div>
+                    <div class="formSubmit">
+                        <input type="submit" class="redB" name="btnSubmit" value="save" />
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </fieldset>
+        </form>
     </div>
     
 <?php include_once "includes/footer.php";?>   
