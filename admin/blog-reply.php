@@ -8,7 +8,7 @@
 <title>Home</title>
 
 <link href="css/main.css" rel="stylesheet" type="text/css" />
-<link href="css/pagination.css" rel="stylesheet" type="text/css" />
+<!--<link href="css/pagination.css" rel="stylesheet" type="text/css" />-->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 
 <script type="text/javascript" src="js/plugins/spinner/ui.spinner.js"></script>
@@ -173,22 +173,28 @@
 	$pagination = "";
 	if($lastpage > 1)
 	{	
-		$pagination .= "<div class=\"pagination\">";
+		$pagination .= "<div class=\"pagination\"><ul class=\"pages\">";
 		//previous button
-		if ($page > 1) 
-			$pagination.= "<a href=\"$targetpage?page=$prev\"><< Previous</a>";
+		if ($page > 1)         
+			//$pagination.= "<li class=\"prev\"><a href=\"$targetpage?page=$prev\"><</a></li>";
+            $pagination.= "<li class=\"prev\"><a href=\"$targetpage?page=$prev\">Previous</a></li>";
 		else
-			$pagination.= "<span class=\"disabled\"><< Previous</span>";	
+			//$pagination.= "<span class=\"disabled\"><< Previous</span>";
+            //$pagination.= "<li class=\"prev\"><a href=\"#\"><</a></li>";
+            $pagination.= "<li class=\"prev fg-button ui-button ui-state-disabled\">Previous</li>";
+            	
 		
 		//pages	
 		if ($lastpage < 7 + ($adjacents * 2))	//not enough pages to bother breaking it up
 		{	
 			for ($counter = 1; $counter <= $lastpage; $counter++)
 			{
-				if ($counter == $page)
-					$pagination.= "<span class=\"current\">$counter</span>";
+				if ($counter == $page)                
+					//$pagination.= "<span class=\"current\">$counter</span>";
+                    $pagination.= "<li><a href=\"#\" class=\"active\">$counter</a></li>";
 				else
-					$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";					
+					//$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";
+                    $pagination.= "<li><a href=\"$targetpage?page=$counter\">$counter</a></li>";					
 			}
 		}
 		elseif($lastpage > 5 + ($adjacents * 2))	//enough pages to hide some
@@ -199,53 +205,65 @@
 				for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++)
 				{
 					if ($counter == $page)
-						$pagination.= "<span class=\"current\">$counter</span>";
+						//$pagination.= "<span class=\"current\">$counter</span>";
+                        $pagination.= "<li><a href=\"#\" class=\"active\">$counter</a></li>";
 					else
-						$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";					
+						//$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";
+                        $pagination.= "<li><a href=\"$targetpage?page=$counter\">$counter</a></li>";					
 				}
 				$pagination.= "...";
-				$pagination.= "<a href=\"$targetpage?page=$lpm1\">$lpm1</a>";
-				$pagination.= "<a href=\"$targetpage?page=$lastpage\">$lastpage</a>";		
+				$pagination.= "<li><a href=\"$targetpage?page=$lpm1\">$lpm1</a></li>";
+				$pagination.= "<li><a href=\"$targetpage?page=$lastpage\">$lastpage</a></li>";		
 			}
 			//in middle; hide some front and some back
 			elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2))
 			{
-				$pagination.= "<a href=\"$targetpage?page=1\">1</a>";
-				$pagination.= "<a href=\"$targetpage?page=2\">2</a>";
+				$pagination.= "<li><a href=\"$targetpage?page=1\">1</a></li>";
+				$pagination.= "<li><a href=\"$targetpage?page=2\">2</a></li>";
 				$pagination.= "...";
 				for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++)
 				{
 					if ($counter == $page)
-						$pagination.= "<span class=\"current\">$counter</span>";
+						//$pagination.= "<span class=\"current\">$counter</span>";
+                        $pagination.= "<li><a href=\"#\" class=\"active\">$counter</a></li>";
 					else
-						$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";					
+						//$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";
+                        $pagination.= "<li><a href=\"$targetpage?page=$counter\">$counter</a></li>";					
 				}
 				$pagination.= "...";
-				$pagination.= "<a href=\"$targetpage?page=$lpm1\">$lpm1</a>";
-				$pagination.= "<a href=\"$targetpage?page=$lastpage\">$lastpage</a>";		
+//				$pagination.= "<a href=\"$targetpage?page=$lpm1\">$lpm1</a>";
+//				$pagination.= "<a href=\"$targetpage?page=$lastpage\">$lastpage</a>";
+				$pagination.= "<li><a href=\"$targetpage?page=$lpm1\">$lpm1</a></li>";
+				$pagination.= "<li><a href=\"$targetpage?page=$lastpage\">$lastpage</a></li>";		
 			}
 			//close to end; only hide early pages
 			else
 			{
-				$pagination.= "<a href=\"$targetpage?page=1\">1</a>";
-				$pagination.= "<a href=\"$targetpage?page=2\">2</a>";
+				//$pagination.= "<a href=\"$targetpage?page=1\">1</a>";
+				//$pagination.= "<a href=\"$targetpage?page=2\">2</a>";
+				$pagination.= "<li><a href=\"$targetpage?page=1\">1</a></li>";
+				$pagination.= "<li><a href=\"$targetpage?page=2\">2</a></li>";                
 				$pagination.= "...";
 				for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++)
 				{
 					if ($counter == $page)
-						$pagination.= "<span class=\"current\">$counter</span>";
+						//$pagination.= "<span class=\"current\">$counter</span>";
+                        $pagination.= "<li><a href=\"#\" class=\"active\">$counter</a></li>";
 					else
-						$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";					
+						//$pagination.= "<a href=\"$targetpage?page=$counter\">$counter</a>";
+                        $pagination.= "<li><a href=\"$targetpage?page=$counter\">$counter</a></li>";					
 				}
 			}
 		}
 		
 		//next button
 		if ($page < $counter - 1) 
-			$pagination.= "<a href=\"$targetpage?page=$next\">Next >></a>";
+			//$pagination.= "<a href=\"$targetpage?page=$next\">Next >></a>";
+            $pagination.= "<li class=\"next\"><a href=\"$targetpage?page=$next\">Next</a></li>";
 		else
-			$pagination.= "<span class=\"disabled\">Next >></span>";
-		$pagination.= "</div>\n";		
+			//$pagination.= "<span class=\"disabled\">Next >></span>";
+            $pagination.= "<li class=\"next fg-button ui-button ui-state-disabled\">Next</li>";
+		$pagination.= "</ul></div>\n";		
 	}
 ?>
 
