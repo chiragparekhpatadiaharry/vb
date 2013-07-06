@@ -107,7 +107,7 @@
                         $msg->information("Post deleted successfully.");
                         ?>
                         <br />
-                        <a title="" onclick="javascript:window.history.back();" class="wButton bluewB ml15 m10"><span>Click here to go back</span></a>
+                        <a title="" onclick="javascript:window.history.go(-1);return false" class="wButton bluewB ml15 m10"><span>Click here to go back</span></a>
                         <?php
                     }
                 }else{

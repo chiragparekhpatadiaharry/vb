@@ -87,12 +87,23 @@
     <!-- Main content wrapper -->
     <div class="wrapper">                             
 
+
+
+
+
+
         <div class="widget">
             <div class="title"><img src="images/icons/dark/pencil.png" alt="" class="titleIcon" /><h6>New Post</h6></div>
-            <form method="post" action="<?php echo $_SERVER['PHP_SELF']?>">                  
-                <textarea rows="5" name="post_content" style="margin:5px;width: 98%;" placeholder="Whats on your mind"></textarea>
-                <input class="blueB ml10 ui-wizard-content ui-formwizard-button" type="submit" name="submit" value="Post" style="float: right;margin:10px" />
+
+            <form id="validate" class="form" method="post" action="<?php echo $_SERVER['PHP_SELF']?>">                  
+                    <div class="formRow">                        
+                        <div class="formRight"><textarea rows="8" cols="" name="post_content" class="validate[required]" id="post_content"></textarea></div><div class="clear"></div>
+                    </div>            
+                <div class="formSubmit">
+                    <input class="blueB ml10 ui-wizard-content ui-formwizard-button" type="submit" name="submit" value="Post" style="float: right;margin:10px" />
+                </div>                                
             </form>
+            
             <div style="clear: both;"></div>
         </div>
         <br />
@@ -306,9 +317,15 @@
                     ?>                                    
                     <div class="title"><h6><a href="#"><?php echo $name;?></a></h6><div class="clear"></div></div>                   
                     
-                        <form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-                            <input type="text" name="reply_content" style="margin:10px;width:80%;height:30px" placeholder="Write your reply..." />
+                        <form id="replyvalidate" class="form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+                            <div class="formRight">
+                                <input type="text" id="reply_content" name="reply_content" class="validate[required]" />
+                            </div>
+                            <!--<input type="text" name="reply_content" style="margin:10px;width:80%;height:30px" placeholder="Write your reply..." />-->
                             <input type="hidden" name="post_id" value="<?php echo $r["post_id"] ?>" />
+                            <div class="formSubmit">
+                                <input class="blueB ml10 ui-wizard-content ui-formwizard-button" type="submit" name="submit" value="Post" style="float: right;margin:10px">
+                            </div>                            
                             <input type="submit" class="greenB ui-formwizard-button" name="submitreply<?php echo $r["post_id"];?>" value="Reply" />
                         </form>
                         <?php
