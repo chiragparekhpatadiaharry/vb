@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 07, 2013 at 08:39 AM
+-- Generation Time: Jul 07, 2013 at 07:15 PM
 -- Server version: 5.1.33
 -- PHP Version: 5.2.9
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `about_us_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(80) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `about_us_category`
@@ -37,7 +37,16 @@ CREATE TABLE IF NOT EXISTS `about_us_category` (
 
 INSERT INTO `about_us_category` (`id`, `name`) VALUES
 (6, 'Madanmohan Prabhu'),
-(7, 'Test');
+(7, 'Test'),
+(8, 'sfsf'),
+(9, 'cat 2'),
+(10, 'cat 3'),
+(11, 'cat 4'),
+(12, 'cat 5'),
+(13, 'cat 6'),
+(14, 'Latest Category'),
+(15, 'casdcdas'),
+(16, 'scsdcsasdss');
 
 -- --------------------------------------------------------
 
@@ -102,6 +111,30 @@ INSERT INTO `album_photo_gallery` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE IF NOT EXISTS `feedback` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `content` text NOT NULL,
+  `is_testimonial` char(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `feedback`
+--
+
+INSERT INTO `feedback` (`id`, `name`, `email`, `mobile`, `content`, `is_testimonial`) VALUES
+(6, 'Madanmohan Prabhu', 'kishanpatadia@gmail.com', '8460895048', 'kasjfsdklj', '0'),
+(7, 'Chirag', 'chiragparekhn@gmail.com', '9016263659', 'asfasdfsdfsadsdaf', '0');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `image_photo_gallery`
 --
 
@@ -125,6 +158,25 @@ INSERT INTO `image_photo_gallery` (`id`, `album_id`, `name`, `path`, `descriptio
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `latest_news`
+--
+
+CREATE TABLE IF NOT EXISTS `latest_news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `news_date` datetime NOT NULL,
+  `title` varchar(80) NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `latest_news`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `track_media_gallery`
 --
 
@@ -142,8 +194,6 @@ CREATE TABLE IF NOT EXISTS `track_media_gallery` (
 -- Dumping data for table `track_media_gallery`
 --
 
-INSERT INTO `track_media_gallery` (`id`, `album_id`, `name`, `path`, `description`, `secure`) VALUES
-(13, 3, 'asfasdfsad1', 'Test_asfasdfsad1_07072013140810.mp3', 'desc', 0);
 
 -- --------------------------------------------------------
 
