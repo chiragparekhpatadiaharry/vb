@@ -23,7 +23,7 @@
         </li>
         <li class="ui"><a href="#" title=""><span>Bulk Mail</span></a></li>
         <li class="ui"><a href="#" title=""><span>Day Importance</span></a></li>
-        <li class="ui"><a href="#" title=""><span>Latest News</span></a></li>
+        <li class="ui"><a href="latest-news.php" title=""><span>Latest News</span></a></li>
         <li class="ui"><a href="blog-reply.php" title=""><span>Aproove Blog Reply</span></a></li>
         <li class="ui"><a href="#" title=""><span>Utsav Calendar</span></a></li>
         <li class="forms"><a href="#" title="" class="exp"><span>About us page</span><strong>3</strong></a>
@@ -32,7 +32,7 @@
                 <li><a href="about-us-content.php" title="">Content</a></li>
                 <li><a href="add-new-about-us-content.php" title="">Add Content</a></li>
             </ul>
-        </li>
+        </li>        
         <li class="ui"><a href="feedback.php" title=""><span>Feedback</span></a></li>
         <li class="ui"><a href="#" title=""><span>Download Statistics</span></a></li>
     </ul>

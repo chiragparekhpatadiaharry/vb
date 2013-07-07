@@ -39,9 +39,9 @@
         </a>
         <?php
             include_once("includes/checksession.php");
-            if(isset($_POST['btnDelete']))
+            if(isset($_GET['btnDelete']))
             {
-                $ids=$_POST['checkRow'];
+                $ids=$_GET['checkRow'];
                 if(count($ids)>0)
                 {
                       include_once("includes/connection.php");         
@@ -63,7 +63,8 @@
                         <div class="nNote nSuccess hideit">
                             <p><strong>SUCCESS: </strong>Selected track deleted successfully.</p>
                         </div>
-        <?php    
+        <?php
+                        echo "<script type=\"text/javascript\">location.href='track.php';</script>";    
                       }
                       else
                       {
@@ -85,7 +86,7 @@
                 }
           }
         ?>
-        <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+        <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="get">
         <br />
         <select name="lstAlbum">
            <option selected="" value="-1">- - Select Album - -</option>
@@ -98,7 +99,7 @@
                 {
                     while($r=mysql_fetch_array($rs))
                     {
-                        if(isset($_POST['lstAlbum']) && $_POST['lstAlbum']!="-1" && $r['id']==$_POST['lstAlbum'])
+                        if(isset($_GET['lstAlbum']) && $_GET['lstAlbum']!="-1" && $r['id']==$_GET['lstAlbum'])
                             $s="selected=\"\"";
                         else
                             $s="";
@@ -125,40 +126,16 @@
                         <td class="sortCol">Photo Name</td>
                         <td>Media File</td>
                         <td>Description</td>
+                        <td>Security</td>
                         <td style="width: 11%;">Actions</td>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <td colspan="5">
+                        <td colspan="6">
                             <div style="float: left;" class="formSubmit">
                                 <input onclick="javascript: return confirm('Do you really want to delete selected photo?');" name="btnDelete" class="redB" type="submit" value="Delete Selected" />
                             </div>
-                            <!--
-                            <div class="itemActions">
-                                <label>Apply action:</label>
-                                <select>
-                                    <option value="">Select action...</option>
-                                    <option value="Delete">Delete</option>
-                                </select>
-                            </div>
-                            -->
-                            <!--
-                                <div class="tPagination">
-                                <ul>
-                                    <li class="prev"><a title="" href="#"></a></li>
-                                    <li><a title="" href="#">1</a></li>
-                                    <li><a title="" href="#">2</a></li>
-                                    <li><a title="" href="#">3</a></li>
-                                    <li><a title="" href="#">4</a></li>
-                                    <li><a title="" href="#">5</a></li>
-                                    <li><a title="" href="#">6</a></li>
-                                    <li>...</li>
-                                    <li><a title="" href="#">20</a></li>
-                                    <li class="next"><a title="" href="#"></a></li>
-                                </ul>
-                            </div>
-                            -->
                         </td>
                     </tr>
                 </tfoot>
@@ -166,21 +143,147 @@
                     <?php
                         include_once "includes/connection.php";
                         $con=new MySQL();
+                        
                         $q="";
-                        if(isset($_POST['btnFilter']) && $_POST['lstAlbum']!="-1")
+                        $found=false;
+                        $numRows=0;
+                        $rs=null;
+                        $all=false;
+                        $albumId=-1;
+                        if(isset($_GET['lstAlbum']) && $_GET['lstAlbum']!="-1")
                         {
-                            $aid=$_POST['lstAlbum'];
-                            $q="select * from track_media_gallery where album_id=".$aid." order by id";
+                            $all=false;
+                            $albumId=$_GET['lstAlbum'];
+                            $rs=mysql_query("select count(id) from track_media_gallery where album_id=".$albumId."");
+                            $r=mysql_fetch_array($rs);
+                            $numRows=intval($r[0]); 
+                            if($numRows>0)
+                            {
+                                $found=true;
+                                $q="select * from track_media_gallery where album_id=".$albumId." order by id";
+                            }
                         }
                         else
                         {
-                            $q="select * from track_media_gallery order by id";
-                        }
-                        $rs=mysql_query($q);
-                        if(mysql_num_rows($rs)>0)
-                        {
-                            while($r=mysql_fetch_array($rs))
+                            $all=true;
+                            $rs=mysql_query("select count(id) from track_media_gallery");
+                            $r=mysql_fetch_array($rs);
+                            $numRows=intval($r[0]); 
+                            if($numRows>0)
                             {
+                                $found=true;
+                                $q="select * from track_media_gallery order by id";
+                            }
+                        }
+                        
+                       	$tbl_name="track_media_gallery";
+                    	$adjacents = 3;
+                        if($all)
+                    	   $query = "SELECT COUNT(*) as num FROM $tbl_name";
+                        else
+                            $query = "SELECT COUNT(*) as num FROM $tbl_name where album_id=".$albumId;
+                    	$total_pages = mysql_fetch_array(mysql_query($query));
+                        $totalcount=$total_pages;
+                    	$total_pages = $total_pages['num'];
+                    	
+                    	$targetpage = "track.php";
+                    	$limit = 2; 								//how many items to show per page
+                    	$page = isset($_GET['page'])?$_GET['page']:null;
+                    	if($page) 
+                    		$start = ($page - 1) * $limit; 			//first item to display on this page
+                    	else
+                    		$start = 0;
+                            
+                        $sql=$q." LIMIT $start, $limit";    
+                    	$result = mysql_query($sql);
+                    	
+                    	if ($page == 0) $page = 1;					//if no page var is given, default to 1.
+                    	$prev = $page - 1;							//previous page is page - 1
+                    	$next = $page + 1;							//next page is page + 1
+                    	$lastpage = ceil($total_pages/$limit);		//lastpage is = total pages / items per page, rounded up.
+                    	$lpm1 = $lastpage - 1;						//last page minus 1
+                    	
+                    	$pagination = "";
+                    	if($lastpage > 1)
+                    	{	
+                    		$pagination .= "<div style=\"margin-top:0px\" class=\"pagination\"><ul class=\"pages\">";
+                    		if ($page > 1)         
+                                $pagination.= "<li class=\"prev\"><a href=\"$targetpage?page=$prev&lstAlbum=$albumId\">Previous</a></li>";
+                    		else
+                                $pagination.= "<li class=\"prev fg-button ui-button ui-state-disabled\">Previous</li>";
+                                	
+                    		//pages	
+                    		if ($lastpage < 7 + ($adjacents * 2))	//not enough pages to bother breaking it up
+                    		{	
+                    			for ($counter = 1; $counter <= $lastpage; $counter++)
+                    			{
+                    				if ($counter == $page)                
+                                        $pagination.= "<li><a href=\"#\" class=\"active\">$counter</a></li>";
+                    				else
+                                        $pagination.= "<li><a href=\"$targetpage?page=$counter&lstAlbum=$albumId\">$counter</a></li>";					
+                    			}
+                    		}
+                    		elseif($lastpage > 5 + ($adjacents * 2))	//enough pages to hide some
+                    		{
+                    			//close to beginning; only hide later pages
+                    			if($page < 1 + ($adjacents * 2))		
+                    			{
+                    				for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++)
+                    				{
+                    					if ($counter == $page)
+                                            $pagination.= "<li><a href=\"#\" class=\"active\">$counter</a></li>";
+                    					else
+                                            $pagination.= "<li><a href=\"$targetpage?page=$counter&lstAlbum=$albumId\">$counter</a></li>";					
+                    				}
+                    				$pagination.= "...";
+                    				$pagination.= "<li><a href=\"$targetpage?page=$lpm1&lstAlbum=$albumId\">$lpm1</a></li>";
+                    				$pagination.= "<li><a href=\"$targetpage?page=$lastpage&lstAlbum=$albumId\">$lastpage</a></li>";		
+                    			}
+                    			//in middle; hide some front and some back
+                    			elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2))
+                    			{
+                    				$pagination.= "<li><a href=\"$targetpage?page=1&lstAlbum=$albumId\">1</a></li>";
+                    				$pagination.= "<li><a href=\"$targetpage?page=2&lstAlbum=$albumId\">2</a></li>";
+                    				$pagination.= "...";
+                    				for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++)
+                    				{
+                    					if ($counter == $page)
+                                            $pagination.= "<li><a href=\"#\" class=\"active\">$counter</a></li>";
+                    					else
+                                            $pagination.= "<li><a href=\"$targetpage?page=$counter&lstAlbum=$albumId\">$counter</a></li>";					
+                    				}
+                    				$pagination.= "...";
+                    				$pagination.= "<li><a href=\"$targetpage?page=$lpm1&lstAlbum=$albumId\">$lpm1</a></li>";
+                    				$pagination.= "<li><a href=\"$targetpage?page=$lastpage&lstAlbum=$albumId\">$lastpage</a></li>";		
+                    			}
+                    			//close to end; only hide early pages
+                    			else
+                    			{
+                    				$pagination.= "<li><a href=\"$targetpage?page=1&lstAlbum=$albumId\">1</a></li>";
+                    				$pagination.= "<li><a href=\"$targetpage?page=2&lstAlbum=$albumId\">2</a></li>";                
+                    				$pagination.= "...";
+                    				for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++)
+                    				{
+                    					if ($counter == $page)
+                                            $pagination.= "<li><a href=\"#\" class=\"active\">$counter</a></li>";
+                    					else
+                                            $pagination.= "<li><a href=\"$targetpage?page=$counter&lstAlbum=$albumId\">$counter</a></li>";					
+                    				}
+                    			}
+                    		}
+                    		
+                    		//next button
+                    		if ($page < $counter - 1) 
+                                $pagination.= "<li class=\"next\"><a href=\"$targetpage?page=$next&lstAlbum=$albumId\">Next</a></li>";
+                    		else
+                                $pagination.= "<li class=\"next fg-button ui-button ui-state-disabled\">Next</li>";
+                    		$pagination.= "</ul></div>\n";
+                        }
+                        if($found)
+                        {      
+                            if(mysql_num_rows($result)>0){
+                        		while($r = mysql_fetch_array($result))
+                                {
                     ?>       
                         
                     <tr>
@@ -188,12 +291,13 @@
                             <input value="<?php echo $r['id'] ?>" type="checkbox" name="checkRow[]" id="checkRow<?php echo $r['id'] ?>" id="titleCheck2" />
                         </td>
                         <td align="left"><?php echo $r["name"]; ?></td>
-                        <td align="center">
+                        <td align="left">
                             <div><?php echo $r["path"]; ?></div>
                         </td>
                         <td>
                             <?php echo $r["description"]; ?>
-                        </td>                     
+                        </td>
+                        <td align="left"><?php echo $r["secure"]=="0"?"Allow Download":"Restrict Download"; ?></td>                     
                         <td class="actBtns">
                             <a class="tipS" title="Update" href="update-track.php?q=<?php echo $r["id"];?>">
                                 <img alt="" src="images/icons/edit.png" />
@@ -206,12 +310,13 @@
                     
                     <?php
                             }
+                          }
                         }
                         else
                         {
                     ?>
                             <tr>
-                                <td colspan="5">
+                                <td colspan="6">
                                     <div style="margin-top: 0px;" class="nNote nInformation hideit">
                                         <p><strong>INFORMATION: </strong>No track found.</p>
                                     </div>
@@ -223,6 +328,9 @@
                     ?>        
                 </tbody>
             </table>
+            <div>
+                <?php echo $pagination;?>
+            </div>
             </form>
         </div>
     

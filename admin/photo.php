@@ -43,9 +43,9 @@
         </a>
         <?php
             include_once("includes/checksession.php");
-            if(isset($_POST['btnDelete']))
+            if(isset($_GET['btnDelete']))
             {
-                $ids=$_POST['checkRow'];
+                $ids=$_GET['checkRow'];
                 if(count($ids)>0)
                 {
                       include_once("includes/connection.php");         
@@ -68,7 +68,8 @@
                         <div class="nNote nSuccess hideit">
                             <p><strong>SUCCESS: </strong>Selected photo deleted successfully.</p>
                         </div>
-        <?php    
+        <?php
+                        echo "<script type=\"text/javascript\">location.href='photo.php';</script>";
                       }
                       else
                       {
@@ -186,11 +187,11 @@
                             $query = "SELECT COUNT(*) as num FROM $tbl_name where album_id=".$albumId;
                     	$total_pages = mysql_fetch_array(mysql_query($query));
                         $totalcount=$total_pages;
-                    	$total_pages = $total_pages[num];
+                    	$total_pages = $total_pages['num'];
                     	
                     	$targetpage = "photo.php";
                     	$limit = 2; 								//how many items to show per page
-                    	$page = $_GET['page'];
+                    	$page = isset($_GET['page'])?$_GET['page']:null;
                     	if($page) 
                     		$start = ($page - 1) * $limit; 			//first item to display on this page
                     	else
@@ -292,7 +293,7 @@
                                     <input value="<?php echo $r['id'] ?>" type="checkbox" name="checkRow[]" id="checkRow<?php echo $r['id'] ?>" id="titleCheck2" />
                                 </td>
                                 <td align="left"><?php echo $r["name"]; ?></td>
-                                <td align="center">
+                                <td align="left">
                                     <a rel="lightbox" title="" href="uploads/original/<?php echo $r["path"]; ?>">
                                         <img style="height: 60px;width: 60px;border:2px solid #cecece" alt="" src="uploads/thumbs/<?php echo $r["path"]; ?>" />
                                     </a>

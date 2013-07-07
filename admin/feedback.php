@@ -31,11 +31,7 @@
     
     <!-- Main content wrapper -->
     <div class="wrapper">
-        <br />
-        <a style="margin: 5px;" class="button blueB" title="" href="feedback-reply.php">
-            <img class="icon" alt="" src="images/icons/light/arrowLeft.png" />
-            <span>Reply</span>
-        </a>       
+        <br />               
         <?php
             include_once("includes/checksession.php");
             if(isset($_POST['btnDelete']))
@@ -164,8 +160,78 @@
                     
         ?>         
         
+        <?php
+            if(!isset($_POST["btnReply"])){
+                getTable();
+        ?>
         
-        <div class="widget" style="margin-top:20px;">
+        
+        <?php
+        }else{
+                $ids=$_POST['checkRow'];
+                if(count($ids)>0)
+                {
+                      include_once("includes/connection.php");         
+                      $qid="";
+                      foreach($ids as $id) 
+                      {
+             	        $qid.=$id.",";
+                      }
+                      $qid=substr($qid,0,strlen($qid)-1);
+                      $con=new MySQL();
+                      $result = mysql_query("select email from feedback where id in(".$qid.")");                      
+                      $con->CloseConnection();
+?>
+            <form method="post" action="feedback-reply.php" class="form">
+            <fieldset>
+                <div class="widget">
+                    <div class="title"><img src="images/icons/dark/list.png" alt="" class="titleIcon"><h6>Reply</h6></div>
+                    <div class="formRow">
+                        <label>Selected emails:</label>
+                        <div style="border: 1px solid blue;height:150px;overflow:scroll;">
+                        <?php
+                        while($r=mysql_fetch_assoc($result)){
+                            echo $r["email"]."<br />";
+                        }
+                        ?>
+                        </div>
+                    </div>                                                                          
+                    <div class="formRow">
+                        <label>Write your reply:</label>
+                        <div class="formRight"><textarea name="reply_content" rows="8" cols="" name="textarea"></textarea></div>
+                        <div class="clear"></div>
+                    </div>  
+                    <div class="formRow">
+                         <div class="formSubmit">
+                                    <input name="btnReply" class="blueB" type="submit" value="Reply" />
+                        </div>
+                        <div class="clear"></div>
+                    </div> 
+                    <input type="hidden" name="ids" value="<?php echo $qid;?>" />                   
+                                      
+                </div>
+            </fieldset>
+                       
+        </form>  
+<?php                      
+                }
+                else
+                {
+        ?>
+                    <div class="nNote nWarning hideit">
+                        <p><strong>WARNING: </strong>Select at least one feedback.</p>
+                    </div>
+        <?php
+                    getTable();
+                }            
+        }
+        ?>
+    
+    </div>
+<?php
+    function getTable(){
+?>
+<div class="widget" style="margin-top:20px;">
             <div class="title"><span class="titleIcon"><input type="checkbox" name="titleCheck" id="titleCheck"></span><h6>Feedback</h6></div>
             <form id="frm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
             <table width="100%" cellspacing="0" cellpadding="0" id="checkAll" class="sTable withCheck mTable">
@@ -183,13 +249,17 @@
                 <tfoot>
                     <tr>
                         <td colspan="7">
-                            <div style="float: left;" class="formSubmit">
+                            <div style="float: left;margin-left: 5px; margin-right: 5px;" class="formSubmit">
                                 <input  onclick="javascript: return confirm('Do you really want to delete selected photo?');" name="btnDelete" class="redB" type="submit" value="Delete Selected" />
-                            </div>
-                            <div style="float: left;" class="formSubmit">
+                            </div>                            
+                            <div style="float: left;margin-left: 5px; margin-right: 5px;" class="formSubmit">
+                                <input name="btnReply" class="blueB" type="submit" value="Reply" />
+                            </div>                                                        
+                            <div style="float: left;margin-left: 5px; margin-right: 5px;" class="formSubmit">
                                 <input  onclick="javascript: return confirm('Do you really want to set selected feedback as testimonial?');" name="btnTestimonial" class="blueB" type="submit" value="Testimonial Selected" />
                             </div>
-                            <div style="float: left;" class="formSubmit">
+                            
+                            <div style="float: left;margin-left: 5px; margin-right: 5px;" class="formSubmit">
                                 <input  onclick="javascript: return confirm('Do you really want to reset selected feedback from testimonial?');" name="btnResetTestimonial" class="button brownB" type="submit" value="Reset Testimonial Selected" />
                             </div>                       
                         </td>
@@ -224,7 +294,7 @@
                                 <img alt="" src="images/icons/dark/arrowRight.png" />
                             </a>
                             <a onclick="javascript: return confirm('Do you really want to reset feedback from testimonial?');" class="tipS" title="Reset Testimonial" href="feedback-reset-testimonial.php?q=<?php echo $r["id"];?>">
-                                <img alt="" src="images/icons/dark/arrowRight.png" />
+                                <img alt="" src="images/icons/dark/arrowLeft.png" />
                             </a>                                                        
                         </td>
                     </tr>
@@ -250,9 +320,9 @@
             </table>
             </form>
         </div>
-    
-    </div>
-    
+<?php        
+    }
+?>    
 <?php include_once "includes/footer.php";?>   
 
 </body>

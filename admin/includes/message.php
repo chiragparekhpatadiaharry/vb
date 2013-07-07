@@ -23,7 +23,7 @@
         }   
         function information($msg){
         ?>
-            <div class="nNote nInformation hideit">
+            <div style="margin-top: 0px;" class="nNote nInformation hideit">
                 <p><strong>INFORMATION: </strong><?php echo $msg?></p>
             </div>
         <?php            

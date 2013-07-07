@@ -111,7 +111,9 @@
                         }
                         else
                         {
-                            $ext= end(explode('.',$path));
+                            $e=explode('.',$path);
+                            $ext= end($e);
+
                             $ext='.'.$ext;
                             $newpath=$r['name'].'_'.str_replace(' ','',$name).'_'.date('dmYHis');
                             rename("uploads/original/".$path,"uploads/original/".$newpath.$ext);

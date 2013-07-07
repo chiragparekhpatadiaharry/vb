@@ -61,7 +61,7 @@ class Zebra_Pagination
         'navigation_position'       =>  'outside',
 
         // a flag telling whether query strings in base_url should be kept or not
-        'preserve_query_string'     =>  0,
+        'preserve_query_string'     =>  1,
 
         // string for "previous page"
         'previous'                  =>  'Previous page',
