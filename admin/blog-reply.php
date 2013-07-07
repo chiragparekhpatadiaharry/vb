@@ -85,12 +85,7 @@
     <div class="line"></div>
     
     <!-- Main content wrapper -->
-    <div class="wrapper">                             
-
-
-
-
-
+    <div class="wrapper">                            
 
         <div class="widget">
             <div class="title"><img src="images/icons/dark/pencil.png" alt="" class="titleIcon" /><h6>New Post</h6></div>
@@ -367,7 +362,6 @@
 <?php $con->CloseConnection(); ?>        
   </div>    
     
-   
 <?php include_once "includes/footer.php";?>   
 
 </body>
