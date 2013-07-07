@@ -16,9 +16,9 @@
         </li>
         <li class="forms"><a href="#" title="" class="exp"><span>Media Gallery</span><strong>3</strong></a>
             <ul class="sub">
-                <li><a href="#" title="">View</a></li>
-                <li><a href="#" title="">Album</a></li>
-                <li><a href="#" title="">Add Track</a></li>                
+                <li><a href="track-album.php" title="">Album</a></li>
+                <li><a href="track.php" title="">Tracks</a></li>                
+                <li><a href="add-new-track.php" title="">Add Track</a></li>                
             </ul>
         </li>
         <li class="ui"><a href="#" title=""><span>Bulk Mail</span></a></li>

@@ -1,14 +1,14 @@
 <?php include_once "includes/checksession.php"; ?>
 <?php
     if(!isset($_POST['btnSubmit']))
-        header("location: photo-album.php");
+        header("location: track-album.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Update Photo Album</title>
+<title>Update Track Album</title>
 
 <?php include_once "includes/common-css-js.php";?>
 
@@ -37,24 +37,24 @@
     <!-- Main content wrapper -->
     <div class="wrapper">
         <br />
-        <a style="margin: 5px;" class="button blueB" title="" href="photo-album.php">
+        <a style="margin: 5px;" class="button blueB" title="" href="track-album.php">
             <img class="icon" alt="" src="images/icons/light/view.png" />
             <span>View</span>
         </a>
-        <a style="margin: 5px;" class="button blueB" title="" href="add-new-photo-album.php">
+        <a style="margin: 5px;" class="button blueB" title="" href="add-new-track-album.php">
             <img class="icon" alt="" src="images/icons/light/add.png" />
             <span>Add New</span>
         </a>
         <?php
              if(isset($_POST['btnSubmit']))
              {
-                if(trim($_POST['txtPhotoAlbumName'])!="")
+                if(trim($_POST['txtTrackAlbumName'])!="")
                 {
                     include_once "includes/connection.php";
                     $con=new MySQL();
                     $id=$_POST['hidId'];
-                    $name=$_POST['txtPhotoAlbumName'];
-                    $rs=mysql_query("select id,name from album_photo_gallery where name like '".$name."'");
+                    $name=$_POST['txtTrackAlbumName'];
+                    $rs=mysql_query("select id,name from album_media_gallery where name like '".$name."'");
                     if(mysql_num_rows($rs)>0)
                     {
                         $r=mysql_fetch_array($rs);
@@ -75,7 +75,7 @@
         <?php
                         }
                     }
-                    else if(mysql_query("update album_photo_gallery set name='".$name."' where id=".$id))
+                    else if(mysql_query("update album_media_gallery set name='".$name."' where id=".$id))
                     {
         ?>
                          <div class="nNote nSuccess hideit">
@@ -87,7 +87,7 @@
                     {
         ?>
                         <div class="nNote nFailure hideit">
-                            <p><strong>FAILURE: </strong>Oops sorry. We are unable to update photo album. Please try again.</p>
+                            <p><strong>FAILURE: </strong>Oops sorry. We are unable to update track album. Please try again.</p>
                         </div>
         <?php
                     }

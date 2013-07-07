@@ -1,10 +1,14 @@
 <?php include_once "includes/checksession.php"; ?>
+<?php 
+    include_once "includes/message.php";
+    $msg=new Message(); 
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Add New Photo</title>
+<title>Add New Track</title>
 
 <?php include_once "includes/common-css-js.php";?>
 
@@ -33,100 +37,75 @@
     <!-- Main content wrapper -->
     <div class="wrapper">
         <br />
-        <a style="margin: 5px;" class="button blueB" title="" href="photo.php">
+        <a style="margin: 5px;" class="button blueB" title="" href="track.php">
             <img class="icon" alt="" src="images/icons/light/view.png" />
             <span>View</span>
         </a>
         <?php
-             include_once "includes/connection.php";
-             include_once "includes/image.php";
-             $con=new MySQL();
              if(isset($_POST['btnSubmit']))
              {
+                include_once "includes/connection.php";
+                include_once "includes/image.php";
+                $con=new MySQL();
+                
                 $album=$_POST['lstAlbum'];
-                $photoName=$_POST['txtPhotoName'];
+                $trackName=$_POST['txtTrackName'];
                 $desc=$_POST['txtDesc'];
+                $sec=$_POST['secRadio'];
                 
                 if(!is_dir("uploads"))
             	{
                     mkdir("uploads");
             	}
-                if(!is_dir("uploads/thumbs"))
+                if(!is_dir("uploads/track"))
             	{
-                    mkdir("uploads/thumbs");
+                    mkdir("uploads/track");
             	}
-                if(!is_dir("uploads/original"))
-            	{
-                    mkdir("uploads/original");
-            	}
-                $img_name=$_FILES['fileImage']['name'];
-                $img_tmp_name=$_FILES['fileImage']['tmp_name'];
-                $img_type=$_FILES['fileImage']['type'];
-                $rs=mysql_query("select name from album_photo_gallery where id=".$album);
+                $track_name=$_FILES['fileTrack']['name'];
+                $track_tmp_name=$_FILES['fileTrack']['tmp_name'];
+                $track_type=$_FILES['fileTrack']['type'];
+                $ext= end(explode('.',$track_name));
+                $ext='.'.$ext;
+                
+                $rs=mysql_query("select name from album_media_gallery where id=".$album);
                 $r=mysql_fetch_array($rs);
                 date_default_timezone_set('Asia/Calcutta');
-                $prod_img_path=$r['name'].'_'.str_replace(' ','',$photoName).'_'.date('dmYHis');
-                $ext="";
-                switch($img_type)
-                {
-                    case "image/gif":
-                        $ext=".gif";
-                        break;
-                    case "image/bmp":
-                        $ext=".bmp";
-                        break;
-                    case "image/jpeg":
-                        $ext=".jpg";
-                        break;
-                    case "image/png":
-                        $ext=".png";
-                        break;
-                        
-                }
+                $prod_track_path=$r['name'].'_'.str_replace(' ','',$trackName).'_'.date('dmYHis');
                 
-                $p="uploads/original/".$prod_img_path.$ext;
-                
-                if($album!="-1" && trim($photoName)!="" && trim($desc)!="" && $img_name!="" && ($img_type=="image/gif" or $img_type=="image/bmp" or $img_type=="image/jpeg" or $img_type=="image/png"))
+                $p="uploads/track/".$prod_track_path.$ext;
+                if(!($ext==".mp3" || $ext==".wav"))
                 {
-                        move_uploaded_file($img_tmp_name,"uploads/original/".$prod_img_path.$ext);
-                        $image = new SimpleImage();
-                        $image->load($p);
-                        $image->resize(150,150);
-                        $image->save('uploads/thumbs/'.$prod_img_path.$ext);
-                        if(mysql_query("insert into image_photo_gallery(album_id,name,path,description) values($album,'$photoName','".$prod_img_path.$ext."','$desc')"))
-                        {
-        ?>
-                                <div class="nNote nSuccess hideit">
-                                    <p><strong>SUCCESS: </strong>New photo saved successfully.</p>
-                                </div>
-        <?php
-                        }
-                        else
-                        {
-        ?>
-                            <div class="nNote nFailure hideit">
-                                <p><strong>FAILURE: </strong>Oops sorry. We are unable to save photo. Please try again.</p>
-                            </div>
-        <?php
-                        }
+                    $msg->warning("Select valid track file.");
                 }
                 else
                 {
-        ?>
-                     <div class="nNote nWarning hideit">
-                        <p><strong>WARNING: </strong>Please provide all of the fields.</p>
-                     </div>
-        <?php
+                    if($album!="-1" && trim($trackName)!="" && trim($desc)!="" && $track_name!="" && ($ext==".mp3" || $ext==".wav"))
+                    {
+                            move_uploaded_file($track_tmp_name,"uploads/track/".$prod_track_path.$ext);
+                            if(mysql_query("insert into track_media_gallery(album_id,name,path,description,secure) values($album,'$trackName','".$prod_track_path.$ext."','$desc',$sec)"))
+                            {
+                                $msg->success("New track saved successfully.");
+                            }
+                            else
+                            {
+                                $msg->error("We are unable to save track. Please try again.");
+                            }
+                    }
+                    else
+                    {
+                        $msg->warning("Please provide all of the fields.");
+                    }
                 }
+                $con->CloseConnection();
              }
-             $con->CloseConnection();
+             
         ?>
         <form enctype="multipart/form-data" style="margin-top:20px;" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" class="form" id="validate">
         	<fieldset>
                 <div class="widget" style="margin-top: 20px;">
                     <div class="title">
                         <img class="titleIcon" alt="" src="images/icons/dark/add.png" />
-                        <h6>Add Photo</h6>
+                        <h6>Add Tack</h6>
                     </div>
                     <div class="formRow">
                         <label>Select Album:&nbsp;<span class="req">*</span></label>
@@ -135,7 +114,7 @@
                            <?php
                                 include_once "includes/connection.php";
                                 $con=new MySQL();
-                                $rs=mysql_query("select id,name from album_photo_gallery");
+                                $rs=mysql_query("select id,name from album_media_gallery");
                                 if(mysql_num_rows($rs)>0)
                                 {
                                     while($r=mysql_fetch_array($rs))
@@ -151,21 +130,29 @@
                         <div class="clear"></div>
                     </div>
                     <div class="formRow">
-                        <label>Photo Name:&nbsp;<span class="req">*</span></label>
+                        <label>Track Name:&nbsp;<span class="req">*</span></label>
                         <div class="formRight">
-                            <input type="text" id="txtPhotoName" name="txtPhotoName" class="validate[required]" />
+                            <input type="text" id="txtTrackName" name="txtTrackName" class="validate[required]" />
                         </div><div class="clear"></div>
                     </div>
                     <div class="formRow">
-                        <label>Select Image:&nbsp;<span class="req">*</span></label>
+                        <label>Select File:&nbsp;<span class="req">*</span></label>
                         <div class="formRight">
-                            <input type="file" id="fileImage" name="fileImage" class="validate[required]" />
+                            <input type="file" id="fileTrack" name="fileTrack" class="validate[required]" />
                         </div><div class="clear"></div>
                     </div>
                     <div class="formRow">
                         <label>Description:&nbsp;<span class="req">*</span></label>
                         <div class="formRight">
                             <textarea name="txtDesc" id="txtDesc" class="validate[required]" ></textarea>
+                        </div><div class="clear"></div>
+                    </div>
+                    <div class="formRow">
+                        <label>Security:&nbsp;<span class="req">*</span></label>
+                        <div class="formRight">
+                            <input type="radio" id="rdSecAllowDl" value="0" name="secRadio" checked="checked" style="opacity: 0;" /> Allow Download
+                            <div class="clear"></div><br />
+                            <input type="radio" id="rdSecRestrictDl" value="1" name="secRadio" style="opacity: 0;" /> Restrict Download
                         </div><div class="clear"></div>
                     </div>
                     <div class="formSubmit">

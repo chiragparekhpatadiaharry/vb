@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Photo</title>
+<title>Track</title>
 
 <?php include_once "includes/common-css-js.php";?>
 
@@ -21,7 +21,7 @@
     <div class="titleArea">
         <div class="wrapper">
             <div class="pageTitle">
-                <h5>Photo</h5>
+                <h5>Track</h5>
                <!--<span>Manage Photo Album.</span>-->
             </div>
             <div class="clear"></div>
@@ -33,7 +33,7 @@
     <!-- Main content wrapper -->
     <div class="wrapper">
         <br />
-        <a style="margin: 5px;" class="button blueB" title="" href="add-new-photo.php">
+        <a style="margin: 5px;" class="button blueB" title="" href="add-new-track.php">
             <img class="icon" alt="" src="images/icons/light/add.png" />
             <span>Add New</span>
         </a>
@@ -52,17 +52,16 @@
                       }
                       $qid=substr($qid,0,strlen($qid)-1);
                       $con=new MySQL();
-                      $rs=mysql_query("select path from image_photo_gallery where id in(".$qid.")");
+                      $rs=mysql_query("select path from track_media_gallery where id in(".$qid.")");
                       while($r=mysql_fetch_array($rs))
                       {
-                        unlink("uploads/original/".$r['path']);
-                        unlink("uploads/thumbs/".$r['path']);
+                        unlink("uploads/track/".$r['path']);
                       }
-                      if(mysql_query("delete from image_photo_gallery where id in(".$qid.")"))
+                      if(mysql_query("delete from track_media_gallery where id in(".$qid.")"))
                       {
         ?>
                         <div class="nNote nSuccess hideit">
-                            <p><strong>SUCCESS: </strong>Selected photo deleted successfully.</p>
+                            <p><strong>SUCCESS: </strong>Selected track deleted successfully.</p>
                         </div>
         <?php    
                       }
@@ -70,7 +69,7 @@
                       {
         ?>
                         <div class="nNote nFailure hideit">
-                            <p><strong>FAILURE: </strong>Oops sorry. We are unable to delete selected photo. Please try again.</p>
+                            <p><strong>FAILURE: </strong>Oops sorry. We are unable to delete selected track. Please try again.</p>
                         </div>
         <?php  
                       }
@@ -80,7 +79,7 @@
                 {
         ?>
                     <div class="nNote nWarning hideit">
-                        <p><strong>WARNING: </strong>Select at least one photo.</p>
+                        <p><strong>WARNING: </strong>Select at least one track.</p>
                     </div>
         <?php
                 }
@@ -93,7 +92,7 @@
            <?php
                 include_once "includes/connection.php";
                 $con=new MySQL();
-                $rs=mysql_query("select id,name from album_photo_gallery");
+                $rs=mysql_query("select id,name from album_media_gallery");
                 $s="";
                 if(mysql_num_rows($rs)>0)
                 {
@@ -124,7 +123,7 @@
                     <tr>
                         <td><img alt="" src="images/icons/tableArrows.png" /></td>
                         <td class="sortCol">Photo Name</td>
-                        <td>Image</td>
+                        <td>Media File</td>
                         <td>Description</td>
                         <td style="width: 11%;">Actions</td>
                     </tr>
@@ -171,11 +170,11 @@
                         if(isset($_POST['btnFilter']) && $_POST['lstAlbum']!="-1")
                         {
                             $aid=$_POST['lstAlbum'];
-                            $q="select * from image_photo_gallery where album_id=".$aid." order by id";
+                            $q="select * from track_media_gallery where album_id=".$aid." order by id";
                         }
                         else
                         {
-                            $q="select * from image_photo_gallery order by id";
+                            $q="select * from track_media_gallery order by id";
                         }
                         $rs=mysql_query($q);
                         if(mysql_num_rows($rs)>0)
@@ -190,18 +189,16 @@
                         </td>
                         <td align="left"><?php echo $r["name"]; ?></td>
                         <td align="center">
-                            <a rel="lightbox" title="" href="uploads/original/<?php echo $r["path"]; ?>">
-                                <img style="height: 60px;width: 60px;border:2px solid #cecece" alt="" src="uploads/thumbs/<?php echo $r["path"]; ?>" />
-                            </a>
+                            <div><?php echo $r["path"]; ?></div>
                         </td>
                         <td>
                             <?php echo $r["description"]; ?>
                         </td>                     
                         <td class="actBtns">
-                            <a class="tipS" title="Update" href="update-photo.php?q=<?php echo $r["id"];?>">
+                            <a class="tipS" title="Update" href="update-track.php?q=<?php echo $r["id"];?>">
                                 <img alt="" src="images/icons/edit.png" />
                             </a>
-                            <a onclick="javascript: return confirm('Do you really want to delete this photo?');" class="tipS" title="Remove" href="delete-photo.php?q=<?php echo $r["id"];?>">
+                            <a onclick="javascript: return confirm('Do you really want to delete this track?');" class="tipS" title="Remove" href="delete-track.php?q=<?php echo $r["id"];?>">
                                 <img alt="" src="images/icons/remove.png" />
                             </a>
                         </td>
@@ -216,7 +213,7 @@
                             <tr>
                                 <td colspan="5">
                                     <div style="margin-top: 0px;" class="nNote nInformation hideit">
-                                        <p><strong>INFORMATION: </strong>No photo found.</p>
+                                        <p><strong>INFORMATION: </strong>No track found.</p>
                                     </div>
                                 </td>
                             </tr>

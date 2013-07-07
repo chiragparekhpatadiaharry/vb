@@ -1,14 +1,14 @@
 <?php include_once "includes/checksession.php"; ?>
 <?php
     if(!isset($_GET['q']))
-        header("location: photo-album.php");
+        header("location: track-album.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Update Photo</title>
+<title>Update Track</title>
 
 <?php include_once "includes/common-css-js.php";?>
 
@@ -25,7 +25,7 @@
     <div class="titleArea">
         <div class="wrapper">
             <div class="pageTitle">
-                <h5>Update Photo</h5>
+                <h5>Update Track</h5>
                 <!-- <span>Update photo album.</span> -->
             </div>
             <div class="clear"></div>
@@ -37,11 +37,11 @@
     <!-- Main content wrapper -->
     <div class="wrapper">
         <br />
-        <a style="margin: 5px;" class="button blueB" title="" href="photo.php">
+        <a style="margin: 5px;" class="button blueB" title="" href="track.php">
             <img class="icon" alt="" src="images/icons/light/view.png" />
             <span>View</span>
         </a>
-        <a style="margin: 5px;" class="button blueB" title="" href="add-new-photo.php">
+        <a style="margin: 5px;" class="button blueB" title="" href="add-new-track.php">
             <img class="icon" alt="" src="images/icons/light/add.png" />
             <span>Add New</span>
         </a>
@@ -51,27 +51,27 @@
                 include_once "includes/connection.php";
                 $con=new MySQL();
                 $id=$_GET['q'];
-                $rs=mysql_query("select * from image_photo_gallery where id=".$id);
+                $rs=mysql_query("select * from track_media_gallery where id=".$id);
                 $r=mysql_fetch_array($rs);
                 $con->CloseConnection();
              }
         ?>
-        <form enctype="multipart/form-data" style="margin-top:20px;" action="update-photo2.php" method="post" class="form" id="validate">
+         <form enctype="multipart/form-data" style="margin-top:20px;" action="update-track2.php" method="post" class="form" id="validate">
             <input type="hidden" name="hidId" value="<?php echo $r['id']; ?>" />
         	<fieldset>
                 <div class="widget" style="margin-top: 20px;">
                     <div class="title">
-                        <img class="titleIcon" alt="" src="images/icons/dark/pencil.png" />
-                        <h6>Update Photo</h6>
+                        <img class="titleIcon" alt="" src="images/icons/dark/add.png" />
+                        <h6>Update Tack</h6>
                     </div>
                     <div class="formRow">
-                        <label>Select Album:</label>
-                        <select name="lstAlbum">
+                        <label>Select Album:&nbsp;<span class="req">*</span></label>
+                        <select name="lstAlbum" >
                            <option selected="" value="-1">- - Select - -</option>
                            <?php
                                 include_once "includes/connection.php";
                                 $con=new MySQL();
-                                $rs2=mysql_query("select id,name from album_photo_gallery");
+                                $rs2=mysql_query("select id,name from album_media_gallery");
                                 if(mysql_num_rows($rs2)>0)
                                 {
                                     while($r2=mysql_fetch_array($rs2))
@@ -87,25 +87,35 @@
                         <div class="clear"></div>
                     </div>
                     <div class="formRow">
-                        <label>Photo Name:&nbsp;<span class="req">*</span></label>
+                        <label>Track Name:&nbsp;<span class="req">*</span></label>
                         <div class="formRight">
-                            <input type="text" value="<?php echo $r['name'];?>" id="txtPhotoName" name="txtPhotoName" class="validate[required]" />
+                            <input type="text" value="<?php echo $r['name'];?>" id="txtTrackName" name="txtTrackName" class="validate[required]" />
                         </div><div class="clear"></div>
                     </div>
                     <div class="formRow">
-                        <input type="hidden" name="hidPath" value="<?php echo $r['path']; ?>" />
-                        <a style="float: left;margin-right: 20px;" rel="lightbox" title="" href="uploads/original/<?php echo $r["path"]; ?>">
-                            <img style="height: 60px;width: 60px;border:2px solid #cecece" alt="" src="uploads/thumbs/<?php echo $r["path"]; ?>" />
-                        </a>
-                        <label>Change Image:</label>
+                        <label>File:</label>
                         <div class="formRight">
-                            <input type="file" id="fileImage" name="fileImage" /><br />
+                            <input type="hidden" name="hidPath" value="<?php echo $r['path']; ?>" />
+                            <input type="text" readonly="" name="txtPath" value="<?php echo $r['path']; ?>" />
+                        </div><div class="clear"></div>
+                        <br />                                        
+                        <label>Change File:</label>
+                        <div class="formRight">
+                            <input type="file" id="fileTrack" name="fileTrack" />
                         </div><div class="clear"></div>
                     </div>
                     <div class="formRow">
                         <label>Description:&nbsp;<span class="req">*</span></label>
                         <div class="formRight">
-                            <textarea name="txtDesc" id="txtDesc" class="validate[required]" ><?php echo $r['description'];?></textarea>
+                            <textarea name="txtDesc" id="txtDesc" class="validate[required]" ><?php echo $r['description']; ?></textarea>
+                        </div><div class="clear"></div>
+                    </div>
+                    <div class="formRow">
+                        <label>Security:&nbsp;<span class="req">*</span></label>
+                        <div class="formRight">
+                            <input type="radio" id="rdSecAllowDl" value="0" name="secRadio" <?php echo ($r['secure']==0)?"checked=\"checked\"":""; ?> style="opacity: 0;" /> Allow Download
+                            <div class="clear"></div><br />
+                            <input type="radio" id="rdSecRestrictDl" value="1" name="secRadio" <?php echo ($r['secure']==1)?"checked=\"checked\"":""; ?> style="opacity: 0;" /> Restrict Download
                         </div><div class="clear"></div>
                     </div>
                     <div class="formSubmit">

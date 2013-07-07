@@ -4,9 +4,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Add New Photo Album</title>
+<title>Add New Track Album</title>
 
 <?php include_once "includes/common-css-js.php";?>
+
 <!-- Shared on MafiaShare.net  --><!-- Shared on MafiaShare.net  --></head>
 
 <body>
@@ -20,7 +21,7 @@
     <div class="titleArea">
         <div class="wrapper">
             <div class="pageTitle">
-                <h5>Add New Photo Album</h5>
+                <h5>Add New Track Album</h5>
                 <!--<span>Add new photo album.</span>-->
             </div>
             <div class="clear"></div>
@@ -32,7 +33,7 @@
     <!-- Main content wrapper -->
     <div class="wrapper">
         <br />
-        <a style="margin: 5px;" class="button blueB" title="" href="photo-album.php">
+        <a style="margin: 5px;" class="button blueB" title="" href="track-album.php">
             <img class="icon" alt="" src="images/icons/light/view.png" />
             <span>View</span>
         </a>
@@ -41,25 +42,25 @@
              $con=new MySQL();
              if(isset($_POST['btnSubmit']))
              {
-                $alubmName=$_POST['txtPhotoAlbumName'];
+                $alubmName=$_POST['txtTrackAlbumName'];
                 if(trim($alubmName)!="")
                 {
-                    $rs=mysql_query("select id from album_photo_gallery where name like '".$alubmName."'");
+                    $rs=mysql_query("select id from album_media_gallery where name like '".$alubmName."'");
                     if(mysql_num_rows($rs)>0)
                     {
         ?>
                         <div class="nNote nWarning hideit">
-                            <p><strong>WARNING: </strong>Photo album with this name already exists. Specify different name.</p>
+                            <p><strong>WARNING: </strong>Track album with this name already exists. Specify different name.</p>
                         </div>
         <?php
                     }
                     else
                     {
-                        if(mysql_query("insert into album_photo_gallery(name) values('".$alubmName."')"))
+                        if(mysql_query("insert into album_media_gallery(name) values('".$alubmName."')"))
                         {
         ?>
                                 <div class="nNote nSuccess hideit">
-                                    <p><strong>SUCCESS: </strong>New photo album saved successfully.</p>
+                                    <p><strong>SUCCESS: </strong>New track album saved successfully.</p>
                                 </div>
         <?php
                         }
@@ -67,7 +68,7 @@
                         {
         ?>
                             <div class="nNote nFailure hideit">
-                                <p><strong>FAILURE: </strong>Oops sorry. We are unable to save photo album. Please try again.</p>
+                                <p><strong>FAILURE: </strong>Oops sorry. We are unable to save track album. Please try again.</p>
                             </div>
         <?php
                         }
@@ -81,12 +82,12 @@
                 <div class="widget" style="margin-top: 20px;">
                     <div class="title">
                         <img class="titleIcon" alt="" src="images/icons/dark/add.png" />
-                        <h6>Add Photo Album</h6>
+                        <h6>Add Track Album</h6>
                     </div>
                     <div class="formRow">
                         <label>Album Name:&nbsp;<span class="req">*</span></label>
                         <div class="formRight">
-                            <input type="text" id="txtPhotoAlbumName" name="txtPhotoAlbumName" class="validate[required]" />
+                            <input type="text" id="txtTrackAlbumName" name="txtTrackAlbumName" class="validate[required]" />
                         </div><div class="clear"></div>
                     </div>
                     <div class="formSubmit">
