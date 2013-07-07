@@ -4,73 +4,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>About us category</title>
-
+<title>About us Category</title>
+<?php include_once "includes/common-css-js.php";?>
 <link href="css/main.css" rel="stylesheet" type="text/css" />
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-
-<script type="text/javascript" src="js/plugins/spinner/ui.spinner.js"></script>
-<script type="text/javascript" src="js/plugins/spinner/jquery.mousewheel.js"></script>
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-
-<script type="text/javascript" src="js/plugins/charts/excanvas.min.js"></script>
-<script type="text/javascript" src="js/plugins/charts/jquery.flot.js"></script>
-<script type="text/javascript" src="js/plugins/charts/jquery.flot.orderBars.js"></script>
-<script type="text/javascript" src="js/plugins/charts/jquery.flot.pie.js"></script>
-<script type="text/javascript" src="js/plugins/charts/jquery.flot.resize.js"></script>
-<script type="text/javascript" src="js/plugins/charts/jquery.sparkline.min.js"></script>
-
-
-<script type="text/javascript" src="js/plugins/forms/uniform.js"></script>
-<script type="text/javascript" src="js/plugins/forms/jquery.cleditor.js"></script>
-<script type="text/javascript" src="js/plugins/forms/jquery.validationEngine-en.js"></script>
-<script type="text/javascript" src="js/plugins/forms/jquery.validationEngine.js"></script>
-<script type="text/javascript" src="js/plugins/forms/jquery.tagsinput.min.js"></script>
-<script type="text/javascript" src="js/plugins/forms/autogrowtextarea.js"></script>
-<script type="text/javascript" src="js/plugins/forms/jquery.maskedinput.min.js"></script>
-<script type="text/javascript" src="js/plugins/forms/jquery.dualListBox.js"></script>
-<script type="text/javascript" src="js/plugins/forms/jquery.inputlimiter.min.js"></script>
-<script type="text/javascript" src="js/plugins/forms/chosen.jquery.min.js"></script>
-
-<script type="text/javascript" src="js/plugins/wizard/jquery.form.js"></script>
-<script type="text/javascript" src="js/plugins/wizard/jquery.validate.min.js"></script>
-<script type="text/javascript" src="js/plugins/wizard/jquery.form.wizard.js"></script>
-
-<script type="text/javascript" src="js/plugins/uploader/plupload.js"></script>
-<script type="text/javascript" src="js/plugins/uploader/plupload.html5.js"></script>
-<script type="text/javascript" src="js/plugins/uploader/plupload.html4.js"></script>
-<script type="text/javascript" src="js/plugins/uploader/jquery.plupload.queue.js"></script>
-
-<script type="text/javascript" src="js/plugins/tables/datatable.js"></script>
-<script type="text/javascript" src="js/plugins/tables/tablesort.min.js"></script>
-<script type="text/javascript" src="js/plugins/tables/resizable.min.js"></script>
-
-<script type="text/javascript" src="js/plugins/ui/jquery.tipsy.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery.collapsible.min.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery.prettyPhoto.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery.progress.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery.timeentry.min.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery.colorpicker.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery.jgrowl.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery.breadcrumbs.js"></script>
-<script type="text/javascript" src="js/plugins/ui/jquery.sourcerer.js"></script>
-
-<script type="text/javascript" src="js/plugins/calendar.min.js"></script>
-<script type="text/javascript" src="js/plugins/elfinder.min.js"></script>
-
-<script type="text/javascript" src="js/custom.js"></script>
-
-<script type="text/javascript" src="js/charts/chart.js"></script>
-
+<script type="text/javascript" src="js/zebra_pagination.js">
+</script>
 <!-- Shared on MafiaShare.net  --><!-- Shared on MafiaShare.net  --></head>
 
 <body>
 
 <?php include_once "includes/leftside.php";?>
-
-
 
 <?php include_once "includes/rightside.php";?>    
     <!-- Title area -->
@@ -154,36 +97,13 @@
                             <div style="float: left;" class="formSubmit">
                                 <input name="btnDelete" class="redB" type="submit" value="Delete Selected" />
                             </div>
-                            <!--
-                            <div class="itemActions">
-                                <label>Apply action:</label>
-                                <select>
-                                    <option value="">Select action...</option>
-                                    <option value="Delete">Delete</option>
-                                </select>
-                            </div>
-                            -->
-                            <!--
-                                <div class="tPagination">
-                                <ul>
-                                    <li class="prev"><a title="" href="#"></a></li>
-                                    <li><a title="" href="#">1</a></li>
-                                    <li><a title="" href="#">2</a></li>
-                                    <li><a title="" href="#">3</a></li>
-                                    <li><a title="" href="#">4</a></li>
-                                    <li><a title="" href="#">5</a></li>
-                                    <li><a title="" href="#">6</a></li>
-                                    <li>...</li>
-                                    <li><a title="" href="#">20</a></li>
-                                    <li class="next"><a title="" href="#"></a></li>
-                                </ul>
-                            </div>
-                            -->
+                            
                         </td>
                     </tr>
                 </tfoot>
                 <tbody>
                     <?php
+                                                            
                         include_once "includes/connection.php";
                         $con=new MySQL();
                         $rs=mysql_query("select * from about_us_category order by id");

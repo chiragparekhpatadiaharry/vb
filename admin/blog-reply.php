@@ -358,7 +358,7 @@
             $msg->information("No post found");
         }
 	?>
-<?=$pagination?>
+<?php echo $pagination?>
 <?php $con->CloseConnection(); ?>        
   </div>    
     

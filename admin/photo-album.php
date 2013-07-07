@@ -143,7 +143,7 @@
                         if($numRows>0)
                         {
                             $found=true;
-                            $records_per_page = 1;
+                            $records_per_page = 5;
                             require 'includes/Zebra_Pagination.php';
                             $pagination = new Zebra_Pagination();
                             $pagination->reverse(true);                      

@@ -33,7 +33,7 @@
                 <li><a href="add-new-about-us-content.php" title="">Add Content</a></li>
             </ul>
         </li>
-        <li class="ui"><a href="#" title=""><span>Feedback</span></a></li>
+        <li class="ui"><a href="feedback.php" title=""><span>Feedback</span></a></li>
         <li class="ui"><a href="#" title=""><span>Download Statistics</span></a></li>
     </ul>
 </div>
