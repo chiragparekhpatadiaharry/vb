@@ -1,10 +1,10 @@
-<!-- Left side content -->
 <div id="leftSide">
     <div class="logo"><a href="home.php"><img src="images/logo.png" alt="" /></a></div>
     
     <div class="sidebarSep mt0"></div>
     
     <!-- Left navigation -->
+	<!-- Left navigation -->
     <ul id="menu" class="nav">
         <li class="dash"><a href="home.php" title="" class="active"><span>Dashboard</span></a></li>
         <li class="forms"><a href="#" title="" class="exp"><span>Photo Gallery</span><strong>3</strong></a>
